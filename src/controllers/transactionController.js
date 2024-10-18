@@ -4,9 +4,7 @@ import getPriceRange from "../utils/getPriceRange.js";
 
 const seedData = async (req, res) => {
   try {
-    const response = await axios.get(
-      "https://s3.amazonaws.com/roxiler.com/product_transaction.json"
-    );
+    const response = await axios.get(`${process.env.API_URL}`);
     await Transaction.deleteMany();
     const transactions = response.data.map((item) => ({
       id: item.id,
@@ -34,12 +32,14 @@ const listTransactions = async (req, res) => {
       $expr: { $eq: [{ $month: "$dateOfSale" }, monthNumber] },
     };
 
+    
     if (search) {
-      if (isNaN(search)) {
+      if (!isNaN(search)) {
+        const priceSearch = Number(search);
+        query.price = { $gte: priceSearch - 1, $lte: priceSearch + 1 };
+      } else {
         const searchRegex = new RegExp(search, "i");
         query.$or = [{ title: searchRegex }, { description: searchRegex }];
-      } else {
-        query.price = Number(search);
       }
     }
 
