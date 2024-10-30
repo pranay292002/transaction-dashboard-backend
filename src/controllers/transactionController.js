@@ -5,6 +5,7 @@ import getPriceRange from "../utils/getPriceRange.js";
 const seedData = async (req, res) => {
   try {
     const response = await axios.get(`${process.env.API_URL}`);
+    // process.env.API_URL = https://s3.amazonaws.com/roxiler.com/product_transaction.json
     await Transaction.deleteMany();
     const transactions = response.data.map((item) => ({
       id: item.id,
@@ -212,18 +213,19 @@ const getCombinedData = async (req, res) => {
 
     if(!month) {res.status(400).json({ error: "month parameter required" });  return null};
 
+    // INTERNAL_CALL_URL = http://localhost:5000/api/
     const transactionsResponse = await axios.get(
       `${process.env.INTERNAL_CALL_URL}transactions?month=${month}`
     );
-
+    // INTERNAL_CALL_URL = http://localhost:5000/api/
     const statisticsResponse = await axios.get(
       `${process.env.INTERNAL_CALL_URL}transactions/statistics?month=${month}`
     );
-
+  // INTERNAL_CALL_URL = http://localhost:5000/api/
     const barChartResponse = await axios.get(
       `${process.env.INTERNAL_CALL_URL}transactions/bar-chart?month=${month}`
     );
-
+    // INTERNAL_CALL_URL = http://localhost:5000/api/
     const pieChartResponse = await axios.get(
       `${process.env.INTERNAL_CALL_URL}transactions/pie-chart?month=${month}`
     );

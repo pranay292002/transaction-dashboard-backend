@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     await mongoose.connect(`${process.env.MONGO_URI}roxiler_assignment`);
+    //process.env.MONGO_URI = mongodb+srv://root:Pranay%4029@cluster0.z1q35.mongodb.net/
+    
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection failed:", error);
